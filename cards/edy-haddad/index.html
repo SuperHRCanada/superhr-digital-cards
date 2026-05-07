@@ -590,32 +590,6 @@
             font-family: var(--font-body);
         }
 
-        .booking-widget {
-            width: 100%;
-            border: none;
-            border-radius: 16px;
-            min-height: 500px;
-            display: none;
-        }
-
-        .booking-widget.active {
-            display: block;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--superhr-dark-purple);
-            font-family: var(--font-body);
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-        }
-
         @media (max-width: 480px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -684,14 +658,14 @@
                         <i class="fas fa-external-link-alt" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
                     </a>
 
-                    <div class="info-item" onclick="openBooking()" style="cursor: pointer;">
+                    <a href="https://bookings.superhrcanada.com/#/edy" target="_blank" class="info-item" onclick="trackInteraction('booking')">
                         <div class="info-icon icon-calendar"><i class="fas fa-calendar-alt"></i></div>
                         <div class="info-content">
                             <div class="info-label" data-i18n="bookMeeting">Book a Meeting</div>
                             <div class="info-value" data-i18n="scheduleTime">Schedule time with me</div>
                         </div>
-                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
-                    </div>
+                        <i class="fas fa-external-link-alt" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
 
                     <div class="info-item" onclick="scrollToNewsletter()" style="cursor: pointer;">
                         <div class="info-icon icon-newsletter"><i class="fas fa-paper-plane"></i></div>
@@ -774,18 +748,6 @@
                         <span>Added to Zoho CRM</span>
                     </div>
                 </div>
-            </div>
-
-            <div id="bookingContainer" style="display: none;">
-                <button class="back-btn" onclick="closeBooking()">
-                    <i class="fas fa-arrow-left"></i>
-                    <span data-i18n="backToForm">Back to Form</span>
-                </button>
-                <div class="section-header">
-                    <h2 data-i18n="bookMeeting">Book a Meeting</h2>
-                    <p data-i18n="bookingSubtitle">Select a time that works for you</p>
-                </div>
-                <iframe id="bookingFrame" class="booking-widget" src=""></iframe>
             </div>
 
             <p class="privacy-notice">
@@ -1439,33 +1401,6 @@
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        function openBooking() {
-            if (!CONFIG.zohoBookings.enabled) return;
-            
-            const container = document.getElementById('bookingContainer');
-            const formContainer = document.getElementById('formContainer');
-            const frame = document.getElementById('bookingFrame');
-            
-            frame.src = CONFIG.zohoBookings.embedUrl || CONFIG.zohoBookings.bookingUrl;
-            
-            formContainer.style.display = 'none';
-            container.style.display = 'block';
-            frame.classList.add('active');
-            
-            Analytics.trackEvent('booking_opened');
-        }
-
-        function closeBooking() {
-            const container = document.getElementById('bookingContainer');
-            const formContainer = document.getElementById('formContainer');
-            const frame = document.getElementById('bookingFrame');
-            
-            frame.src = '';
-            frame.classList.remove('active');
-            container.style.display = 'none';
-            formContainer.style.display = 'block';
         }
 
         async function submitLead(e) {
