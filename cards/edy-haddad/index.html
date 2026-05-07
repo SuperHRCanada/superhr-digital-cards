@@ -760,7 +760,7 @@
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        <span data-i18n="sendMessage">Send Message</span>
+                        <span data-i18n="sendMessage">Send</span>
                         <div class="spinner" id="btnSpinner"></div>
                     </button>
                 </form>
@@ -913,7 +913,7 @@
                 firstName: "First Name", lastName: "Last Name",
                 workEmail: "Work Email", company: "Company",
                 jobTitleField: "Job Title", phoneNumber: "Phone Number",
-                message: "Message", sendMessage: "Send Message",
+                message: "Message", sendMessage: "Send",
                 thankYou: "Thank You!", successMessage: "Your message has been sent. I'll be in touch soon.",
                 privacyNotice: "By submitting, you agree to our",
                 privacyPolicy: "Privacy Policy", noSpam: "No spam, ever.",
@@ -1343,8 +1343,6 @@
         }
 
         function init() {
-            // REMOVED: document.getElementById('companyName').textContent = CONFIG.employee.companyName;
-            
             document.getElementById('fullName').textContent = CONFIG.employee.fullName;
             document.getElementById('jobTitle').textContent = CONFIG.employee.jobTitle;
             document.getElementById('email').textContent = CONFIG.employee.email;
