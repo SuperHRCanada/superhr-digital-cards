@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarah Chen - Digital Business Card | SuperHR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --superhr-light-purple: #9574DC;
+            --superhr-dark-purple: #6A2287;
+            --superhr-light-gray: #d2d3d5;
+            --superhr-dark-gray: #8c8c8e;
+            --primary-gradient: linear-gradient(135deg, var(--superhr-dark-purple) 0%, var(--superhr-light-purple) 100%);
+            --primary-color: var(--superhr-light-purple);
+            --primary-dark: var(--superhr-dark-purple);
+            --primary-shadow: rgba(106, 34, 135, 0.35);
+            --bg-color: #f5f4f7;
+            --card-bg: #ffffff;
+            --text-primary: #2d2d2f;
+            --text-secondary: var(--superhr-dark-gray);
+            --border-color: var(--superhr-light-gray);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'PT Sans', sans-serif;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            color: var(--text-primary);
+        }
+        h1, h2, h3 { font-family: var(--font-heading); }
+        .main-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .top-controls {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 4px;
+        }
+        .lang-selector { position: relative; }
+        .lang-btn {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            border-color: var(--superhr-light-purple);
+            color: var(--superhr-dark-purple);
+        }
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(106, 34, 135, 0.15);
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+            min-width: 150px;
+        }
+        .lang-dropdown.active { display: block; }
+        .lang-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+        }
+        .lang-option:hover { background: #f5f3f8; }
+        .lang-option.active {
+            background: #f0ebf5;
+            color: var(--superhr-dark-purple);
+            font-weight: 700;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(106, 34, 135, 0.12);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(106, 34, 135, 0.18);
+        }
+        .card-header {
+            background: var(--primary-gradient);
+            padding: 30px 24px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(149, 116, 220, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.4;
+        }
+        .company-logo {
+            max-width: 260px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
+        }
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid rgba(149, 116, 220, 0.4);
+            object-fit: cover;
+            margin-bottom: 16px;
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-name {
+            color: white;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
+            font-family: var(--font-heading);
+        }
+        .profile-title {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+            font-family: var(--font-body);
+        }
+        .card-body {
+            padding: 30px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+        }
+        .info-grid { display: grid; gap: 12px; }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: #faf9fb;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            border: 2px solid transparent;
+        }
+        .info-item:hover {
+            background: #f5f3f8;
+            border-color: var(--superhr-light-purple);
+            transform: translateX(4px);
+        }
+        .info-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .icon-email { background: #ede9f5; color: var(--superhr-dark-purple); }
+        .icon-phone { background: #e8f5e9; color: #2e7d32; }
+        .icon-website { background: #f3e5f5; color: var(--superhr-dark-purple); }
+        .icon-location { background: #fff3e0; color: #ef6c00; }
+        .icon-linkedin { background: #e3f2fd; color: #0077b5; }
+        .icon-calendar { background: #fce4ec; color: #c2185b; }
+        .icon-newsletter { background: #f3e5f5; color: var(--superhr-dark-purple); }
+        .info-content { flex: 1; min-width: 0; }
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--superhr-dark-gray);
+            font-weight: 700;
+            margin-bottom: 2px;
+            font-family: var(--font-body);
+        }
+        .info-value {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 400;
+            word-break: break-word;
+            font-family: var(--font-body);
+        }
+        .card-footer {
+            padding: 0 30px 30px;
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 14px var(--primary-shadow);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 34, 135, 0.45);
+        }
+        .btn-secondary {
+            background: var(--superhr-light-gray);
+            color: var(--superhr-dark-gray);
+        }
+        .btn-secondary:hover {
+            background: #c5c6c8;
+            color: var(--text-primary);
+        }
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(106, 34, 135, 0.12);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: var(--superhr-dark-purple);
+            margin-bottom: 6px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+        .section-header p {
+            color: var(--superhr-dark-gray);
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--superhr-dark-gray);
+            margin-bottom: 6px;
+            font-family: var(--font-body);
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--superhr-light-gray);
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: #faf9fb;
+            color: var(--text-primary);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--superhr-light-purple);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(149, 116, 220, 0.15);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 34, 135, 0.45);
+        }
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .newsletter-section {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8fd 100%);
+            border: 2px solid #e1d4f0;
+        }
+        .newsletter-section .section-header h2 { color: var(--superhr-dark-purple); }
+        .newsletter-section .section-header p { color: var(--superhr-dark-gray); }
+        .newsletter-btn {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 14px var(--primary-shadow);
+        }
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 34, 135, 0.45);
+        }
+        .consent-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .consent-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: var(--superhr-dark-purple);
+            cursor: pointer;
+        }
+        .consent-checkbox label {
+            font-size: 0.85rem;
+            color: var(--superhr-dark-gray);
+            line-height: 1.4;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+        .consent-checkbox label a {
+            color: var(--superhr-dark-purple);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(45, 45, 47, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 380px;
+            width: 100%;
+            animation: slideUp 0.3s ease;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(106, 34, 135, 0.2);
+        }
+        .modal-content h3 { font-family: var(--font-heading); font-weight: 700; }
+        .modal-content p { font-family: var(--font-body); }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--superhr-light-gray);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--superhr-dark-gray);
+        }
+        .close-modal:hover {
+            background: #c5c6c8;
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            margin: 20px auto;
+            background: white;
+            padding: 10px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(106, 34, 135, 0.15);
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--superhr-dark-purple);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            box-shadow: 0 10px 30px rgba(106, 34, 135, 0.3);
+            font-family: var(--font-body);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .privacy-notice {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--superhr-dark-gray);
+            margin-top: 16px;
+            line-height: 1.5;
+            font-family: var(--font-body);
+        }
+        .privacy-notice a {
+            color: var(--superhr-dark-purple);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .success-state { display: none; text-align: center; padding: 20px; }
+        .success-state.active { display: block; }
+        .success-state h3 { font-family: var(--font-heading); font-weight: 700; }
+        .success-state p { font-family: var(--font-body); }
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #e8f5e9;
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 16px;
+        }
+        .zoho-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0ebf5;
+            color: var(--superhr-dark-purple);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 12px;
+            font-family: var(--font-body);
+        }
+        .campaigns-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0ebf5;
+            color: var(--superhr-dark-purple);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 12px;
+            font-family: var(--font-body);
+        }
+        .booking-widget {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            min-height: 500px;
+            display: none;
+        }
+        .booking-widget.active { display: block; }
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--superhr-dark-purple);
+            font-family: var(--font-body);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 480px) {
+            .form-row { grid-template-columns: 1fr; }
+            .card-header { padding: 24px 20px 50px; }
+            .company-logo { max-width: 220px; }
+            .card-body { padding: 20px; }
+            .card-footer { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="top-controls">
+            <div class="lang-selector">
+                <button class="lang-btn" onclick="toggleLang()">
+                    <i class="fas fa-globe"></i>
+                    <span id="currentLang">English</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <div class="lang-option active" onclick="setLanguage('en')" data-lang="en">🇺🇸 English</div>
+                    <div class="lang-option" onclick="setLanguage('es')" data-lang="es">🇪🇸 Español</div>
+                    <div class="lang-option" onclick="setLanguage('fr')" data-lang="fr">🇫🇷 Français</div>
+                    <div class="lang-option" onclick="setLanguage('de')" data-lang="de">🇩🇪 Deutsch</div>
+                    <div class="lang-option" onclick="setLanguage('zh')" data-lang="zh">🇨🇳 中文</div>
+                    <div class="lang-option" onclick="setLanguage('ja')" data-lang="ja">🇯🇵 日本語</div>
+                    <div class="lang-option" onclick="setLanguage('pt')" data-lang="pt">🇧🇷 Português</div>
+                    <div class="lang-option" onclick="setLanguage('ar')" data-lang="ar">🇸🇦 العربية</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="businessCard">
+            <div class="card-header" id="cardHeader">
+                <img src="https://www.superhrcanada.com/files/Images/SPHRBC.png" alt="SuperHR Logo" class="company-logo" id="companyLogo">
+                <img src="https://ui-avatars.com/api/?name=Sarah+Chen&background=9574DC&color=fff&size=200" alt="Profile" class="profile-image" id="profileImage">
+                <h1 class="profile-name" id="fullName">Sarah Chen</h1>
+                <p class="profile-title" id="jobTitle">HR Consultant</p>
+                <span id="companyName" style="display:none;">SuperHR</span>
+            </div>
+
+            <div class="card-body">
+                <div class="info-grid">
+                    <a href="mailto:sarah@superhrcanada.com" class="info-item" id="emailLink" onclick="trackInteraction('email')">
+                        <div class="info-icon icon-email"><i class="fas fa-envelope"></i></div>
+                        <div class="info-content">
+                            <div class="info-label" data-i18n="email">Email</div>
+                            <div class="info-value" id="email">sarah@superhrcanada.com</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
+                    <a href="tel:+14165550147" class="info-item" id="phoneLink" onclick="trackInteraction('phone')">
+                        <div class="info-icon icon-phone"><i class="fas fa-phone"></i></div>
+                        <div class="info-content">
+                            <div class="info-label" data-i18n="phone">Phone</div>
+                            <div class="info-value" id="phone">+1 (416) 555-0147</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
+                    <a href="https://www.superhrcanada.com" target="_blank" class="info-item" id="websiteLink" onclick="trackInteraction('website')">
+                        <div class="info-icon icon-website"><i class="fas fa-globe"></i></div>
+                        <div class="info-content">
+                            <div class="info-label" data-i18n="website">Website</div>
+                            <div class="info-value" id="website">superhrcanada.com</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
+                    <div class="info-item" id="locationItem">
+                        <div class="info-icon icon-location"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="info-content">
+                            <div class="info-label" data-i18n="location">Location</div>
+                            <div class="info-value" id="location">Toronto, ON</div>
+                        </div>
+                    </div>
+
+                    <a href="https://linkedin.com/in/sarahchenhr" target="_blank" class="info-item" id="linkedinLink" onclick="trackInteraction('linkedin')">
+                        <div class="info-icon icon-linkedin"><i class="fab fa-linkedin-in"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">LinkedIn</div>
+                            <div class="info-value" id="linkedin">linkedin.com/in/sarahchenhr</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
+                    <div class="info-item" onclick="openBooking()" style="cursor: pointer;">
+                        <div class="info-icon icon-calendar"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="info-content">
+                            <div class="info-label" data-i18n="bookMeeting">Book a Meeting</div>
+                            <div class="info-value" data-i18n="scheduleTime">Schedule time with me</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </div>
+
+                    <div class="info-item" onclick="scrollToNewsletter()" style="cursor: pointer;">
+                        <div class="info-icon icon-newsletter"><i class="fas fa-paper-plane"></i></div>
+                        <div class="info-content">
+                            <div class="info-label" data-i18n="digest">SuperHR Digest</div>
+                            <div class="info-value" data-i18n="digestTagline">HR insights delivered to your inbox</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="btn btn-primary" onclick="shareCard()">
+                    <i class="fas fa-share-alt"></i> <span data-i18n="share">Share</span>
+                </button>
+                <button class="btn btn-secondary" onclick="showQR()">
+                    <i class="fas fa-qrcode"></i> <span data-i18n="qrCode">QR</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card" id="leadSection">
+            <div id="formContainer">
+                <div class="section-header">
+                    <h2 data-i18n="connectWithMe">Connect With Me</h2>
+                    <p data-i18n="leadFormSubtitle">Leave your details and I'll get back to you</p>
+                </div>
+
+                <form id="leadForm" onsubmit="submitLead(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="firstName">First Name</label>
+                            <input type="text" class="form-input" id="leadFirstName">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="lastName">Last Name</label>
+                            <input type="text" class="form-input" id="leadLastName">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="workEmail">Work Email</label>
+                        <input type="email" class="form-input" id="leadEmail">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="company">Company</label>
+                            <input type="text" class="form-input" id="leadCompany">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="jobTitleField">Job Title</label>
+                            <input type="text" class="form-input" id="leadJobTitle">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="phoneNumber">Phone Number</label>
+                        <input type="tel" class="form-input" id="leadPhone">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="message">Message</label>
+                        <textarea class="form-input" id="leadMessage" rows="3" style="resize: vertical;"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span data-i18n="sendMessage">Send Message</span>
+                        <div class="spinner" id="btnSpinner"></div>
+                    </button>
+                </form>
+
+                <div class="success-state" id="successState">
+                    <div class="success-icon"><i class="fas fa-check"></i></div>
+                    <h3 style="color: var(--superhr-dark-purple); margin-bottom: 8px;" data-i18n="thankYou">Thank You!</h3>
+                    <p style="color: var(--superhr-dark-gray);" data-i18n="successMessage">Your message has been sent. I'll be in touch soon.</p>
+                    <div class="zoho-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Added to Zoho CRM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bookingContainer" style="display: none;">
+                <button class="back-btn" onclick="closeBooking()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-i18n="backToForm">Back to Form</span>
+                </button>
+                <div class="section-header">
+                    <h2 data-i18n="bookMeeting">Book a Meeting</h2>
+                    <p data-i18n="bookingSubtitle">Select a time that works for you</p>
+                </div>
+                <iframe id="bookingFrame" class="booking-widget" src=""></iframe>
+            </div>
+
+            <p class="privacy-notice">
+                <span data-i18n="privacyNotice">By submitting, you agree to our</span> 
+                <a href="#" data-i18n="privacyPolicy">Privacy Policy</a>. 
+                <span data-i18n="noSpam">No spam, ever.</span>
+            </p>
+        </div>
+
+        <div class="section-card newsletter-section" id="newsletterSection">
+            <div id="newsletterFormContainer">
+                <div class="section-header">
+                    <h2 data-i18n="hrInsights">HR Insights</h2>
+                    <p data-i18n="digestSubtitle">Subscribe to the SuperHR Digest for HR insights and updates</p>
+                </div>
+
+                <form id="newsletterForm" onsubmit="subscribeNewsletter(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="firstName">First Name</label>
+                            <input type="text" class="form-input newsletter-input" id="newsletterFirstName">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="lastName">Last Name</label>
+                            <input type="text" class="form-input newsletter-input" id="newsletterLastName">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="emailAddress">Email Address</label>
+                        <input type="email" class="form-input newsletter-input" id="newsletterEmail">
+                    </div>
+
+                    <div class="consent-checkbox">
+                        <input type="checkbox" id="newsletterConsent">
+                        <label for="newsletterConsent" data-i18n="consentText">
+                            I agree to receive marketing communications and understand I can unsubscribe at any time.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn newsletter-btn" id="newsletterSubmitBtn">
+                        <span data-i18n="subscribe">Subscribe</span>
+                        <div class="spinner" id="newsletterSpinner"></div>
+                    </button>
+                </form>
+
+                <div class="success-state" id="newsletterSuccess">
+                    <div class="success-icon" style="background: #f0ebf5; color: var(--superhr-dark-purple);">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h3 style="color: var(--superhr-dark-purple); margin-bottom: 8px;" data-i18n="subscribed">You're Subscribed!</h3>
+                    <p style="color: var(--superhr-dark-gray);" data-i18n="checkInbox">Please check your inbox to confirm your subscription.</p>
+                    <div class="campaigns-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Added to Zoho Campaigns</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="privacy-notice" style="color: var(--superhr-dark-gray); margin-top: 16px;">
+                <span data-i18n="unsubscribeAnytime">You can unsubscribe at any time.</span>
+                <a href="#" data-i18n="viewPrivacyPolicy">View Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="qrModal" onclick="closeModal('qrModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="closeModal('qrModal')"><i class="fas fa-times"></i></button>
+            <h3 style="color: var(--superhr-dark-purple); margin-bottom: 8px;" data-i18n="scanToConnect">Scan to Connect</h3>
+            <p style="color: var(--superhr-dark-gray); font-size: 0.9rem; margin-bottom: 20px;" data-i18n="qrInstructions">Point your camera at the QR code</p>
+            <div class="qr-code">
+                <img src="" alt="QR Code" id="qrImage" style="width: 100%; height: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        const CONFIG_SARAH_CHEN = {
+            employee: {
+                companyName: "SuperHR",
+                fullName: "Sarah Chen",
+                jobTitle: "HR Consultant",
+                email: "sarah@superhrcanada.com",
+                phone: "+1 (416) 555-0147",
+                website: "superhrcanada.com",
+                websiteUrl: "https://www.superhrcanada.com",
+                location: "Toronto, ON",
+                linkedin: "linkedin.com/in/sarahchenhr",
+                linkedinUrl: "https://linkedin.com/in/sarahchenhr",
+                profileImage: "https://ui-avatars.com/api/?name=Sarah+Chen&background=9574DC&color=fff&size=200",
+                zohoUserId: "sarah@superhrcanada.com"
+            },
+            zohoCRM: {
+                webhookUrl: "https://crm.zoho.com/crm/WebToLeadForm?xnQsjsd=YOUR_WEBHOOK_ID",
+                integrationType: "webhook"
+            },
+            zohoBookings: {
+                enabled: true,
+                bookingUrl: "https://bookings.zoho.com/portal/superhr/bookings/sarah-chen",
+                embedUrl: null
+            },
+            zohoCampaigns: {
+                enabled: true,
+                signupFormUrl: "https://zcsub-cmpzourl.maillist-manage.com/ua/Optin?od=YOUR_FORM_ID",
+                apiEndpoint: "https://campaigns.zoho.com/api/v1.1/addlistsubscribers",
+                authToken: "YOUR_CAMPAIGNS_AUTH_TOKEN",
+                defaultList: "list_1"
+            },
+            analytics: {
+                enabled: true,
+                ga4Id: "G-XXXXXXXXXX"
+            }
+        };
+        const CONFIG = CONFIG_SARAH_CHEN;
+
+        const translations = {
+            en: {
+                email: "Email", phone: "Phone", website: "Website", location: "Location",
+                share: "Share", qrCode: "QR Code", scanToConnect: "Scan to Connect",
+                qrInstructions: "Point your camera at the QR code",
+                connectWithMe: "Connect With Me",
+                leadFormSubtitle: "Leave your details and I'll get back to you",
+                firstName: "First Name", lastName: "Last Name",
+                workEmail: "Work Email", company: "Company",
+                jobTitleField: "Job Title", phoneNumber: "Phone Number",
+                message: "Message", sendMessage: "Send Message",
+                thankYou: "Thank You!", successMessage: "Your message has been sent. I'll be in touch soon.",
+                privacyNotice: "By submitting, you agree to our",
+                privacyPolicy: "Privacy Policy", noSpam: "No spam, ever.",
+                copied: "Copied to clipboard!", fillRequired: "Please fill in all required fields.",
+                errorSubmit: "Something went wrong. Please try again.",
+                connecting: "Connecting...",
+                bookMeeting: "Book a Meeting", scheduleTime: "Schedule time with me",
+                backToForm: "Back to Form", bookingSubtitle: "Select a time that works for you",
+                digest: "SuperHR Digest", digestTagline: "HR insights delivered to your inbox",
+                hrInsights: "HR Insights",
+                digestSubtitle: "Subscribe to the SuperHR Digest for HR insights and updates",
+                emailAddress: "Email Address",
+                consentText: "I agree to receive marketing communications and understand I can unsubscribe at any time.",
+                subscribe: "Subscribe",
+                subscribed: "You're Subscribed!",
+                checkInbox: "Please check your inbox to confirm your subscription.",
+                unsubscribeAnytime: "You can unsubscribe at any time.",
+                viewPrivacyPolicy: "View Privacy Policy"
+            },
+            es: {
+                email: "Correo", phone: "Teléfono", website: "Sitio Web", location: "Ubicación",
+                share: "Compartir", qrCode: "Código QR", scanToConnect: "Escanear para Conectar",
+                qrInstructions: "Apunte su cámara al código QR",
+                connectWithMe: "Conecta Conmigo",
+                leadFormSubtitle: "Deja tus datos y me pondré en contacto contigo",
+                firstName: "Nombre", lastName: "Apellido",
+                workEmail: "Correo Laboral", company: "Empresa",
+                jobTitleField: "Cargo", phoneNumber: "Teléfono",
+                message: "Mensaje", sendMessage: "Enviar Mensaje",
+                thankYou: "¡Gracias!", successMessage: "Tu mensaje ha sido enviado. Me pondré en contacto pronto.",
+                privacyNotice: "Al enviar, aceptas nuestra",
+                privacyPolicy: "Política de Privacidad", noSpam: "Nada de spam.",
+                copied: "¡Copiado al portapapeles!", fillRequired: "Por favor completa todos los campos requeridos.",
+                errorSubmit: "Algo salió mal. Por favor intenta de nuevo.",
+                connecting: "Conectando...",
+                bookMeeting: "Reservar Reunión", scheduleTime: "Programa una reunión conmigo",
+                backToForm: "Volver al Formulario", bookingSubtitle: "Selecciona un horario que te funcione",
+                digest: "SuperHR Digest", digestTagline: "Ideas de RRHH en tu bandeja de entrada",
+                hrInsights: "Ideas de RRHH",
+                digestSubtitle: "Suscríbete al SuperHR Digest para ideas y actualizaciones de RRHH",
+                emailAddress: "Correo Electrónico",
+                consentText: "Acepto recibir comunicaciones de marketing y entiendo que puedo cancelar la suscripción en cualquier momento.",
+                subscribe: "Suscribirse",
+                subscribed: "¡Estás Suscrito!",
+                checkInbox: "Por favor revisa tu bandeja de entrada para confirmar tu suscripción.",
+                unsubscribeAnytime: "Puedes cancelar la suscripción en cualquier momento.",
+                viewPrivacyPolicy: "Ver Política de Privacidad"
+            },
+            fr: {
+                email: "E-mail", phone: "Téléphone", website: "Site Web", location: "Localisation",
+                share: "Partager", qrCode: "QR Code", scanToConnect: "Scanner pour Connecter",
+                qrInstructions: "Pointez votre caméra vers le QR code",
+                connectWithMe: "Connectez-vous avec Moi",
+                leadFormSubtitle: "Laissez vos coordonnées et je vous recontacterai",
+                firstName: "Prénom", lastName: "Nom",
+                workEmail: "E-mail Professionnel", company: "Entreprise",
+                jobTitleField: "Poste", phoneNumber: "Téléphone",
+                message: "Message", sendMessage: "Envoyer",
+                thankYou: "Merci !", successMessage: "Votre message a été envoyé. Je vous recontacterai bientôt.",
+                privacyNotice: "En soumettant, vous acceptez notre",
+                privacyPolicy: "Politique de Confidentialité", noSpam: "Pas de spam.",
+                copied: "Copié dans le presse-papiers !", fillRequired: "Veuillez remplir tous les champs obligatoires.",
+                errorSubmit: "Une erreur s'est produite. Veuillez réessayer.",
+                connecting: "Connexion...",
+                bookMeeting: "Réserver une Réunion", scheduleTime: "Planifiez un rendez-vous",
+                backToForm: "Retour au Formulaire", bookingSubtitle: "Sélectionnez un horaire qui vous convient",
+                digest: "SuperHR Digest", digestTagline: "Idées RH directement dans votre boîte mail",
+                hrInsights: "Idées RH",
+                digestSubtitle: "Abonnez-vous au SuperHR Digest pour des idées et mises à jour RH",
+                emailAddress: "Adresse E-mail",
+                consentText: "J'accepte de recevoir des communications marketing et je comprends que je peux me désabonner à tout moment.",
+                subscribe: "S'abonner",
+                subscribed: "Vous êtes Abonné !",
+                checkInbox: "Veuillez vérifier votre boîte de réception pour confirmer votre abonnement.",
+                unsubscribeAnytime: "Vous pouvez vous désabonner à tout moment.",
+                viewPrivacyPolicy: "Voir la Politique de Confidentialité"
+            },
+            de: {
+                email: "E-Mail", phone: "Telefon", website: "Webseite", location: "Standort",
+                share: "Teilen", qrCode: "QR-Code", scanToConnect: "Zum Verbinden Scannen",
+                qrInstructions: "Richten Sie Ihre Kamera auf den QR-Code",
+                connectWithMe: "Mit Mir Verbinden",
+                leadFormSubtitle: "Hinterlassen Sie Ihre Daten und ich melde mich bei Ihnen",
+                firstName: "Vorname", lastName: "Nachname",
+                workEmail: "Geschäftliche E-Mail", company: "Unternehmen",
+                jobTitleField: "Position", phoneNumber: "Telefonnummer",
+                message: "Nachricht", sendMessage: "Nachricht Senden",
+                thankYou: "Vielen Dank!", successMessage: "Ihre Nachricht wurde gesendet. Ich melde mich bald bei Ihnen.",
+                privacyNotice: "Durch das Absenden stimmen Sie unserer",
+                privacyPolicy: "Datenschutzerklärung", noSpam: "Kein Spam.",
+                copied: "In die Zwischenablage kopiert!", fillRequired: "Bitte füllen Sie alle Pflichtfelder aus.",
+                errorSubmit: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+                connecting: "Verbindung wird hergestellt...",
+                bookMeeting: "Meeting Buchen", scheduleTime: "Vereinbaren Sie einen Termin",
+                backToForm: "Zurück zum Formular", bookingSubtitle: "Wählen Sie einen passenden Zeitpunkt",
+                digest: "SuperHR Digest", digestTagline: "HR-Einblicke direkt in Ihren Posteingang",
+                hrInsights: "HR-Einblicke",
+                digestSubtitle: "Abonnieren Sie den SuperHR Digest für HR-Einblicke und Updates",
+                emailAddress: "E-Mail-Adresse",
+                consentText: "Ich stimme zu, Marketingmitteilungen zu erhalten, und verstehe, dass ich mich jederzeit abmelden kann.",
+                subscribe: "Abonnieren",
+                subscribed: "Sie sind Abonniert!",
+                checkInbox: "Bitte überprüfen Sie Ihren Posteingang, um Ihr Abonnement zu bestätigen.",
+                unsubscribeAnytime: "Sie können sich jederzeit abmelden.",
+                viewPrivacyPolicy: "Datenschutzerklärung anzeigen"
+            },
+            zh: {
+                email: "邮箱", phone: "电话", website: "网站", location: "位置",
+                share: "分享", qrCode: "二维码", scanToConnect: "扫描二维码连接",
+                qrInstructions: "将相机对准二维码",
+                connectWithMe: "与我联系",
+                leadFormSubtitle: "留下您的信息，我会尽快回复您",
+                firstName: "名", lastName: "姓",
+                workEmail: "工作邮箱", company: "公司",
+                jobTitleField: "职位", phoneNumber: "电话号码",
+                message: "留言", sendMessage: "发送消息",
+                thankYou: "谢谢！", successMessage: "您的消息已发送。我会尽快与您联系。",
+                privacyNotice: "提交即表示您同意我们的",
+                privacyPolicy: "隐私政策", noSpam: "绝不发送垃圾邮件。",
+                copied: "已复制到剪贴板！", fillRequired: "请填写所有必填字段。",
+                errorSubmit: "出了点问题。请重试。",
+                connecting: "连接中...",
+                bookMeeting: "预约会议", scheduleTime: "与我预约时间",
+                backToForm: "返回表单", bookingSubtitle: "选择适合您的时间",
+                digest: "SuperHR Digest", digestTagline: "人力资源洞察直达您的收件箱",
+                hrInsights: "人力资源洞察",
+                digestSubtitle: "订阅 SuperHR Digest，获取人力资源洞察与更新",
+                emailAddress: "电子邮件地址",
+                consentText: "我同意接收营销通讯，并了解我可以随时取消订阅。",
+                subscribe: "订阅",
+                subscribed: "订阅成功！",
+                checkInbox: "请检查您的收件箱以确认订阅。",
+                unsubscribeAnytime: "您可以随时取消订阅。",
+                viewPrivacyPolicy: "查看隐私政策"
+            },
+            ja: {
+                email: "メール", phone: "電話", website: "ウェブサイト", location: "所在地",
+                share: "共有", qrCode: "QRコード", scanToConnect: "QRコードをスキャン",
+                qrInstructions: "カメラをQRコードに向けてください",
+                connectWithMe: "私とつながる",
+                leadFormSubtitle: "詳細を入力してください。後でご連絡します",
+                firstName: "名", lastName: "姓",
+                workEmail: "勤務先メール", company: "会社名",
+                jobTitleField: "役職", phoneNumber: "電話番号",
+                message: "メッセージ", sendMessage: "送信",
+                thankYou: "ありがとうございます！", successMessage: "メッセージを送信しました。すぐにご連絡します。",
+                privacyNotice: "送信することで、当社の",
+                privacyPolicy: "プライバシーポリシー", noSpam: "スパムはありません。",
+                copied: "クリップボードにコピーしました！", fillRequired: "必須項目をすべて入力してください。",
+                errorSubmit: "エラーが発生しました。もう一度お試しください。",
+                connecting: "接続中...",
+                bookMeeting: "ミーティングを予約", scheduleTime: "私と予定を調整する",
+                backToForm: "フォームに戻る", bookingSubtitle: "都合の良い時間を選択してください",
+                digest: "SuperHR Digest", digestTagline: "HRの洞察を受信箱にお届け",
+                hrInsights: "HRの洞察",
+                digestSubtitle: "HRの洞察と最新情報を受け取るためにSuperHR Digestに登録",
+                emailAddress: "メールアドレス",
+                consentText: "マーケティング通信を受け取ることに同意し、いつでも購読を解除できることを理解しています。",
+                subscribe: "購読する",
+                subscribed: "購読完了！",
+                checkInbox: "購読を確認するために、受信トレイをご確認ください。",
+                unsubscribeAnytime: "いつでも購読を解除できます。",
+                viewPrivacyPolicy: "プライバシーポリシーを表示"
+            },
+            pt: {
+                email: "E-mail", phone: "Telefone", website: "Website", location: "Localização",
+                share: "Compartilhar", qrCode: "QR Code", scanToConnect: "Escanear para Conectar",
+                qrInstructions: "Aponte sua câmera para o QR code",
+                connectWithMe: "Conecte-se Comigo",
+                leadFormSubtitle: "Deixe seus dados e entrarei em contato",
+                firstName: "Nome", lastName: "Sobrenome",
+                workEmail: "E-mail Corporativo", company: "Empresa",
+                jobTitleField: "Cargo", phoneNumber: "Telefone",
+                message: "Mensagem", sendMessage: "Enviar Mensagem",
+                thankYou: "Obrigado!", successMessage: "Sua mensagem foi enviada. Entrarei em contato em breve.",
+                privacyNotice: "Ao enviar, você concorda com nossa",
+                privacyPolicy: "Política de Privacidade", noSpam: "Sem spam.",
+                copied: "Copiado para a área de transferência!", fillRequired: "Por favor, preencha todos os campos obrigatórios.",
+                errorSubmit: "Algo deu errado. Por favor, tente novamente.",
+                connecting: "Conectando...",
+                bookMeeting: "Agendar Reunião", scheduleTime: "Agende um horário comigo",
+                backToForm: "Voltar ao Formulário", bookingSubtitle: "Selecione um horário que funcione para você",
+                digest: "SuperHR Digest", digestTagline: "Insights de RH na sua caixa de entrada",
+                hrInsights: "Insights de RH",
+                digestSubtitle: "Inscreva-se no SuperHR Digest para insights e atualizações de RH",
+                emailAddress: "Endereço de E-mail",
+                consentText: "Concordo em receber comunicações de marketing e entendo que posso cancelar a inscrição a qualquer momento.",
+                subscribe: "Inscrever-se",
+                subscribed: "Inscrito com Sucesso!",
+                checkInbox: "Por favor, verifique sua caixa de entrada para confirmar sua inscrição.",
+                unsubscribeAnytime: "Você pode cancelar a inscrição a qualquer momento.",
+                viewPrivacyPolicy: "Ver Política de Privacidade"
+            },
+            ar: {
+                email: "البريد", phone: "الهاتف", website: "الموقع", location: "الموقع",
+                share: "مشاركة", qrCode: "رمز QR", scanToConnect: "مسح للاتصال",
+                qrInstructions: "وجه الكاميرا نحو رمز QR",
+                connectWithMe: "تواصل معي",
+                leadFormSubtitle: "اترك بياناتك وسأتواصل معك",
+                firstName: "الاسم الأول", lastName: "اسم العائلة",
+                workEmail: "البريد العمل", company: "الشركة",
+                jobTitleField: "المسمى الوظيفي", phoneNumber: "رقم الهاتف",
+                message: "الرسالة", sendMessage: "إرسال الرسالة",
+                thankYou: "شكراً لك!", successMessage: "تم إرسال رسالتك. سأتواصل معك قريباً.",
+                privacyNotice: "بالإرسال، فإنك توافق على",
+                privacyPolicy: "سياسة الخصوصية", noSpam: "لا رسائل مزعجة.",
+                copied: "تم النسخ إلى الحافظة!", fillRequired: "يرجى ملء جميع الحقول المطلوبة.",
+                errorSubmit: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+                connecting: "جاري الاتصال...",
+                bookMeeting: "حجز اجتماع", scheduleTime: "جدولة موعد معي",
+                backToForm: "العودة إلى النموذج", bookingSubtitle: "اختر الوقت المناسب لك",
+                digest: "SuperHR Digest", digestTagline: "رؤى الموارد البشرية إلى بريدك",
+                hrInsights: "رؤى الموارد البشرية",
+                digestSubtitle: "اشترك في SuperHR Digest للحصول على رؤى وتحديثات الموارد البشرية",
+                emailAddress: "عنوان البريد الإلكتروني",
+                consentText: "أوافق على تلقي اتصالات تسويقية وأفهم أنه يمكنني إلغاء الاشتراك في أي وقت.",
+                subscribe: "اشترك",
+                subscribed: "تم الاشتراك بنجاح!",
+                checkInbox: "يرجى التحقق من صندوق الوارد الخاص بك لتأكيد اشتراكك.",
+                unsubscribeAnytime: "يمكنك إلغاء الاشتراك في أي وقت.",
+                viewPrivacyPolicy: "عرض سياسة الخصوصية"
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        const Analytics = {
+            sessionId: null,
+            startTime: null,
+            init() {
+                this.sessionId = this.generateId();
+                this.startTime = Date.now();
+                this.trackEvent('page_view', {
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    userAgent: navigator.userAgent,
+                    language: navigator.language,
+                    screenSize: `${window.screen.width}x${window.screen.height}`
+                });
+                window.addEventListener('beforeunload', () => {
+                    const duration = Math.round((Date.now() - this.startTime) / 1000);
+                    this.trackEvent('session_end', { duration_seconds: duration });
+                });
+            },
+            generateId() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+            },
+            async trackEvent(eventName, eventData = {}) {
+                const payload = {
+                    event: eventName,
+                    session_id: this.sessionId,
+                    timestamp: new Date().toISOString(),
+                    employee: CONFIG.employee.email,
+                    data: eventData
+                };
+                if (CONFIG.analytics.ga4Id && typeof gtag !== 'undefined') {
+                    gtag('event', eventName, eventData);
+                }
+                this.storeLocal(payload);
+            },
+            storeLocal(payload) {
+                const events = JSON.parse(localStorage.getItem('dbc_events') || '[]');
+                events.push(payload);
+                localStorage.setItem('dbc_events', JSON.stringify(events.slice(-100)));
+            }
+        };
+
+        const ZohoCRM = {
+            async submitLead(leadData) {
+                const formData = new URLSearchParams();
+                formData.append('xnQsjsd', extractParam(CONFIG.zohoCRM.webhookUrl, 'xnQsjsd'));
+                formData.append('xmIwtLD', extractParam(CONFIG.zohoCRM.webhookUrl, 'xmIwtLD'));
+                formData.append('actionType', 'TGVhZHM=');
+                formData.append('returnURL', window.location.href);
+                formData.append('Last Name', leadData.lastName);
+                formData.append('First Name', leadData.firstName);
+                formData.append('Email', leadData.email);
+                formData.append('Company', leadData.company);
+                formData.append('Phone', leadData.phone || '');
+                formData.append('Designation', leadData.jobTitle || '');
+                formData.append('Lead Source', 'SuperHR Digital Business Card');
+                formData.append('Description', leadData.message || '');
+                await fetch(CONFIG.zohoCRM.webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData,
+                    mode: 'no-cors'
+                });
+                return { status: 'submitted' };
+            }
+        };
+
+        const ZohoCampaigns = {
+            subscribeViaForm(subscriberData) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = CONFIG.zohoCampaigns.signupFormUrl;
+                form.target = 'zohoCampaignsFrame';
+                form.style.display = 'none';
+                const fields = {
+                    'FIRSTNAME': subscriberData.firstName,
+                    'LASTNAME': subscriberData.lastName,
+                    'CONTACT_EMAIL': subscriberData.email,
+                    'listname': subscriberData.listId
+                };
+                for (const [key, value] of Object.entries(fields)) {
+                    if (value) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = value;
+                        form.appendChild(input);
+                    }
+                }
+                let iframe = document.getElementById('zohoCampaignsFrame');
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.name = 'zohoCampaignsFrame';
+                    iframe.id = 'zohoCampaignsFrame';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+                document.body.appendChild(form);
+                form.submit();
+                setTimeout(() => { document.body.removeChild(form); }, 1000);
+                return Promise.resolve({ status: 'submitted' });
+            },
+            async subscribeViaAPI(subscriberData) {
+                const params = new URLSearchParams({
+                    authtoken: CONFIG.zohoCampaigns.authToken,
+                    scope: 'CampaignsAPI',
+                    resfmt: 'JSON',
+                    listkey: subscriberData.listId,
+                    contactinfo: JSON.stringify({
+                        'First Name': subscriberData.firstName,
+                        'Last Name': subscriberData.lastName,
+                        'Contact Email': subscriberData.email
+                    })
+                });
+                const response = await fetch(`${CONFIG.zohoCampaigns.apiEndpoint}?${params.toString()}`, { method: 'POST' });
+                return response.json();
+            },
+            async subscribe(subscriberData) {
+                if (CONFIG.zohoCampaigns.signupFormUrl && CONFIG.zohoCampaigns.signupFormUrl.includes('http')) {
+                    return this.subscribeViaForm(subscriberData);
+                } else if (CONFIG.zohoCampaigns.authToken) {
+                    return this.subscribeViaAPI(subscriberData);
+                } else {
+                    console.log('Zoho Campaigns not configured. Subscriber data:', subscriberData);
+                    return { status: 'demo_mode' };
+                }
+            }
+        };
+
+        function extractParam(url, param) {
+            const match = url.match(new RegExp(`${param}=([^&]+)`));
+            return match ? match[1] : '';
+        }
+
+        function init() {
+            document.getElementById('companyName').textContent = CONFIG.employee.companyName;
+            document.getElementById('fullName').textContent = CONFIG.employee.fullName;
+            document.getElementById('jobTitle').textContent = CONFIG.employee.jobTitle;
+            document.getElementById('email').textContent = CONFIG.employee.email;
+            document.getElementById('phone').textContent = CONFIG.employee.phone;
+            document.getElementById('website').textContent = CONFIG.employee.website;
+            document.getElementById('location').textContent = CONFIG.employee.location;
+            document.getElementById('linkedin').textContent = CONFIG.employee.linkedin;
+            document.getElementById('profileImage').src = CONFIG.employee.profileImage;
+            document.getElementById('emailLink').href = `mailto:${CONFIG.employee.email}`;
+            document.getElementById('phoneLink').href = `tel:${CONFIG.employee.phone.replace(/\D/g,'')}`;
+            document.getElementById('websiteLink').href = CONFIG.employee.websiteUrl;
+            document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.href)}`;
+            if (CONFIG.analytics.enabled) Analytics.init();
+            const savedLang = localStorage.getItem('dbc_language');
+            if (savedLang && translations[savedLang]) setLanguage(savedLang);
+        }
+
+        function toggleLang() {
+            document.getElementById('langDropdown').classList.toggle('active');
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('dbc_language', lang);
+            document.querySelectorAll('.lang-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.lang === lang);
+            });
+            const langNames = {
+                en: 'English', es: 'Español', fr: 'Français', de: 'Deutsch',
+                zh: '中文', ja: '日本語', pt: 'Português', ar: 'العربية'
+            };
+            document.getElementById('currentLang').textContent = langNames[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            if (lang === 'ar') { document.body.style.direction = 'rtl'; }
+            else { document.body.style.direction = 'ltr'; }
+            document.getElementById('langDropdown').classList.remove('active');
+            Analytics.trackEvent('language_change', { language: lang });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.lang-selector')) {
+                document.getElementById('langDropdown').classList.remove('active');
+            }
+        });
+
+        function trackInteraction(type) {
+            Analytics.trackEvent('contact_interaction', { type: type, timestamp: new Date().toISOString() });
+        }
+
+        function scrollToNewsletter() {
+            document.getElementById('newsletterSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            Analytics.trackEvent('digest_scroll');
+        }
+
+        async function shareCard() {
+            Analytics.trackEvent('share_initiated');
+            const shareData = {
+                title: `${CONFIG.employee.fullName} - ${CONFIG.employee.jobTitle}`,
+                text: `${translations[currentLanguage].connectWithMe} - ${CONFIG.employee.fullName} at ${CONFIG.employee.companyName}`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    Analytics.trackEvent('share_completed', { method: 'native' });
+                } catch (err) { copyToClipboard(window.location.href); }
+            } else { copyToClipboard(window.location.href); }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(translations[currentLanguage].copied);
+                Analytics.trackEvent('share_completed', { method: 'clipboard' });
+            });
+        }
+
+        function showQR() {
+            document.getElementById('qrModal').classList.add('active');
+            Analytics.trackEvent('qr_code_viewed');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function openBooking() {
+            if (!CONFIG.zohoBookings.enabled) return;
+            const container = document.getElementById('bookingContainer');
+            const formContainer = document.getElementById('formContainer');
+            const frame = document.getElementById('bookingFrame');
+            frame.src = CONFIG.zohoBookings.embedUrl || CONFIG.zohoBookings.bookingUrl;
+            formContainer.style.display = 'none';
+            container.style.display = 'block';
+            frame.classList.add('active');
+            Analytics.trackEvent('booking_opened');
+        }
+
+        function closeBooking() {
+            const container = document.getElementById('bookingContainer');
+            const formContainer = document.getElementById('formContainer');
+            const frame = document.getElementById('bookingFrame');
+            frame.src = '';
+            frame.classList.remove('active');
+            container.style.display = 'none';
+            formContainer.style.display = 'block';
+        }
+
+        async function submitLead(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('btnSpinner');
+            const btnText = btn.querySelector('span');
+            const formData = {
+                firstName: document.getElementById('leadFirstName').value.trim(),
+                lastName: document.getElementById('leadLastName').value.trim(),
+                email: document.getElementById('leadEmail').value.trim(),
+                company: document.getElementById('leadCompany').value.trim(),
+                jobTitle: document.getElementById('leadJobTitle').value.trim(),
+                phone: document.getElementById('leadPhone').value.trim(),
+                message: document.getElementById('leadMessage').value.trim(),
+                source: window.location.href,
+                employee: CONFIG.employee.email,
+                submittedAt: new Date().toISOString(),
+                language: currentLanguage
+            };
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = translations[currentLanguage].connecting;
+            try {
+                Analytics.trackEvent('lead_form_submit', { hasMessage: !!formData.message });
+                await ZohoCRM.submitLead(formData);
+                document.getElementById('leadForm').style.display = 'none';
+                document.getElementById('successState').classList.add('active');
+                Analytics.trackEvent('lead_form_success', { lead_email: formData.email });
+                showToast(translations[currentLanguage].thankYou);
+            } catch (error) {
+                console.error('Zoho CRM Error:', error);
+                showToast(translations[currentLanguage].errorSubmit);
+                Analytics.trackEvent('lead_form_error', { error: error.message });
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = translations[currentLanguage].sendMessage;
+            }
+        }
+
+        async function subscribeNewsletter(e) {
+            e.preventDefault();
+            const btn = document.getElementById('newsletterSubmitBtn');
+            const spinner = document.getElementById('newsletterSpinner');
+            const btnText = btn.querySelector('span');
+            const subscriberData = {
+                firstName: document.getElementById('newsletterFirstName').value.trim(),
+                lastName: document.getElementById('newsletterLastName').value.trim(),
+                email: document.getElementById('newsletterEmail').value.trim(),
+                listId: CONFIG.zohoCampaigns.defaultList,
+                source: window.location.href,
+                employee: CONFIG.employee.email,
+                subscribedAt: new Date().toISOString(),
+                language: currentLanguage
+            };
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.textContent = translations[currentLanguage].connecting;
+            try {
+                Analytics.trackEvent('digest_subscribe', { has_name: !!(subscriberData.firstName || subscriberData.lastName) });
+                const result = await ZohoCampaigns.subscribe(subscriberData);
+                console.log('Zoho Campaigns Response:', result);
+                document.getElementById('newsletterForm').style.display = 'none';
+                document.getElementById('newsletterSuccess').classList.add('active');
+                Analytics.trackEvent('digest_success', { subscriber_email: subscriberData.email });
+                showToast(translations[currentLanguage].subscribed);
+            } catch (error) {
+                console.error('Zoho Campaigns Error:', error);
+                showToast(translations[currentLanguage].errorSubmit);
+                Analytics.trackEvent('digest_error', { error: error.message, email: subscriberData.email });
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = translations[currentLanguage].subscribe;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
