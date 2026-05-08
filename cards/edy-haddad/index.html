@@ -709,17 +709,17 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" data-i18n="firstName">First Name</label>
-                            <input type="text" class="form-input" id="leadFirstName">
+                            <input type="text" class="form-input" id="leadFirstName" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" data-i18n="lastName">Last Name</label>
-                            <input type="text" class="form-input" id="leadLastName">
+                            <input type="text" class="form-input" id="leadLastName" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" data-i18n="workEmail">Work Email</label>
-                        <input type="email" class="form-input" id="leadEmail">
+                        <input type="email" class="form-input" id="leadEmail" required>
                     </div>
 
                     <div class="form-row">
@@ -755,7 +755,7 @@
                     <p style="color: var(--superhr-dark-gray);" data-i18n="successMessage">Your message has been sent. I'll be in touch soon.</p>
                     <div class="zoho-badge">
                         <i class="fas fa-check-circle"></i>
-                        <span>Added to Zoho CRM</span>
+                        <span>Submitted to Zoho Forms</span>
                     </div>
                 </div>
             </div>
@@ -853,9 +853,8 @@
                 profileImage: "https://raw.githubusercontent.com/SuperHRCanada/superhr-digital-cards/main/cards/edy-haddad/edy.png",
                 zohoUserId: "edy@superhrcanada.com"
             },
-            zohoCRM: {
-                webhookUrl: "https://crm.zoho.com/crm/WebToLeadForm?xnQsjsd=YOUR_WEBHOOK_ID&xmIwtLD=YOUR_WEBHOOK_ID",
-                integrationType: "webhook"
+            zohoForms: {
+                leadFormUrl: "https://forms.zohopublic.com/SuperHRCanada/form/DBCEdy/formperma/b2tM0xH6erNpcmsnEGMsy58UTSyh-vCeWXBlRWBEpTQ"
             },
             zohoBookings: {
                 enabled: true,
@@ -1206,30 +1205,53 @@
             }
         };
 
-        const ZohoCRM = {
-            async submitLead(leadData) {
-                const formData = new URLSearchParams();
-                formData.append('xnQsjsd', extractParam(CONFIG.zohoCRM.webhookUrl, 'xnQsjsd'));
-                formData.append('xmIwtLD', extractParam(CONFIG.zohoCRM.webhookUrl, 'xmIwtLD'));
-                formData.append('actionType', 'TGVhZHM=');
-                formData.append('returnURL', window.location.href);
-                formData.append('Last Name', leadData.lastName);
-                formData.append('First Name', leadData.firstName);
-                formData.append('Email', leadData.email);
-                formData.append('Company', leadData.company);
-                formData.append('Phone', leadData.phone || '');
-                formData.append('Designation', leadData.jobTitle || '');
-                formData.append('Lead Source', 'SuperHR Digital Business Card');
-                formData.append('Description', leadData.message || '');
+        const ZohoForms = {
+            submitLead(leadData) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = CONFIG.zohoForms.leadFormUrl;
+                form.target = 'zohoLeadFrame';
+                form.style.display = 'none';
                 
-                await fetch(CONFIG.zohoCRM.webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData,
-                    mode: 'no-cors'
-                });
+                const fields = {
+                    'First_Name': leadData.firstName,
+                    'Last_Name': leadData.lastName,
+                    'Work_Email': leadData.email,
+                    'Company': leadData.company,
+                    'Job_Title': leadData.jobTitle,
+                    'Phone_Number': leadData.phone,
+                    'Message': leadData.message,
+                    'Digital_Card_URL': leadData.source,
+                    'Assigned_Employee': leadData.employee
+                };
                 
-                return { status: 'submitted' };
+                for (const [key, value] of Object.entries(fields)) {
+                    if (value) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = value;
+                        form.appendChild(input);
+                    }
+                }
+                
+                let iframe = document.getElementById('zohoLeadFrame');
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.name = 'zohoLeadFrame';
+                    iframe.id = 'zohoLeadFrame';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+                
+                document.body.appendChild(form);
+                form.submit();
+                
+                setTimeout(() => {
+                    if (form.parentNode) document.body.removeChild(form);
+                }, 2000);
+                
+                return Promise.resolve({ status: 'submitted' });
             }
         };
 
@@ -1271,7 +1293,7 @@
                 form.submit();
                 
                 setTimeout(() => {
-                    document.body.removeChild(form);
+                    if (form.parentNode) document.body.removeChild(form);
                 }, 1000);
                 
                 return Promise.resolve({ status: 'submitted' });
@@ -1308,11 +1330,6 @@
                 }
             }
         };
-
-        function extractParam(url, param) {
-            const match = url.match(new RegExp(`${param}=([^&]+)`));
-            return match ? match[1] : '';
-        }
 
         function init() {
             document.getElementById('fullName').textContent = CONFIG.employee.fullName;
@@ -1443,7 +1460,7 @@
                     hasMessage: !!formData.message 
                 });
                 
-                await ZohoCRM.submitLead(formData);
+                await ZohoForms.submitLead(formData);
                 
                 document.getElementById('leadForm').style.display = 'none';
                 document.getElementById('successState').classList.add('active');
@@ -1452,7 +1469,7 @@
                 showToast(translations[currentLanguage].thankYou);
                 
             } catch (error) {
-                console.error('Zoho CRM Error:', error);
+                console.error('Zoho Forms Error:', error);
                 showToast(translations[currentLanguage].errorSubmit);
                 Analytics.trackEvent('lead_form_error', { error: error.message });
             } finally {
