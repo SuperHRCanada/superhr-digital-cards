@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SuperHR - Digital Business Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Analytics -->
@@ -40,8 +40,8 @@
             --success: #10b981;
             --warning: #f59e0b;
             --campaigns: var(--superhr-light-purple);
-            --font-heading: 'Montserrat', sans-serif;
-            --font-body: 'PT Sans', sans-serif;
+            --font-heading: 'Tenor Sans', sans-serif;
+            --font-body: 'Nunito', sans-serif;
         }
 
         body {
@@ -755,7 +755,7 @@
                     <p style="color: var(--superhr-dark-gray);" data-i18n="successMessage">Your message has been sent. I'll be in touch soon.</p>
                     <div class="zoho-badge">
                         <i class="fas fa-check-circle"></i>
-                        <span>Added to Zoho CRM</span>
+                        <span>Successfully added</span>
                     </div>
                 </div>
             </div>
@@ -1223,6 +1223,7 @@
                 formData.append('Phone', leadData.phone || '');
                 formData.append('Designation', leadData.jobTitle || '');
                 formData.append('Description', leadData.message || '');
+                formData.append('Lead Source', 'Digital Business Card');
                 formData.append('aG9uZXlwb3Q', '');
                 
                 await fetch(CONFIG.zohoCRM.webhookUrl, {
