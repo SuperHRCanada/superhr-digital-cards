@@ -611,6 +611,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -670,11 +671,20 @@
                         <i class="fas fa-external-link-alt" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
                     </a>
 
+                    <a href="https://www.linkedin.com/in/luis-straatmann-araujo/" target="_blank" class="info-item" id="linkedinLink" onclick="trackInteraction('linkedin')">
+                        <div class="info-icon icon-linkedin"><i class="fab fa-linkedin-in"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">LinkedIn</div>
+                            <div class="info-value" id="linkedin">linkedin.com/in/luis-straatmann-araujo</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
                     <div class="info-item" id="locationItem">
                         <div class="info-icon icon-location"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="info-content">
                             <div class="info-label" data-i18n="location">Location</div>
-                            <div class="info-value" id="location">Vancouver</div>
+                            <div class="info-value" id="location">Calgary</div>
                         </div>
                     </div>
 
@@ -837,7 +847,7 @@
                 phone: "604 518 0096",
                 website: "superhrcanada.com",
                 websiteUrl: "https://www.superhrcanada.com",
-                location: "Vancouver",
+                location: "Calgary",
                 linkedin: "linkedin.com/in/luis-straatmann-araujo",
                 linkedinUrl: "https://www.linkedin.com/in/luis-straatmann-araujo/",
                 profileImage: "https://raw.githubusercontent.com/SuperHRCanada/superhr-digital-cards/main/cards/luis-straatmann/luis.png",
@@ -1154,6 +1164,8 @@
             
             document.getElementById('emailLink').href = `mailto:${CONFIG.employee.email}`;
             document.getElementById('phoneLink').href = `tel:${CONFIG.employee.phone.replace(/\D/g,'')}`;
+            document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
+            document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
             document.getElementById('websiteLink').href = CONFIG.employee.websiteUrl;
             document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
             
@@ -1198,7 +1210,7 @@
                 `EMAIL;TYPE=WORK:${emp.email}`,
                 `URL:${emp.websiteUrl}`,
                 `ADR;TYPE=WORK:;;${emp.location};;;;`,
-                `NOTE:LinkedIn: ${emp.linkedinUrl}`,
+                `NOTE:Office: (604) 283-3503, (403) 879-8847 | LinkedIn: ${emp.linkedinUrl}`,
                 'END:VCARD'
             ].join('\r\n');
             
