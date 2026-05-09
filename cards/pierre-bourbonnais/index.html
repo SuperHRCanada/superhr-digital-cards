@@ -634,11 +634,29 @@
                         <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
                     </a>
 
-                    <a href="#" class="info-item" id="phoneLink" onclick="trackInteraction('phone')">
+                    <a href="tel:6047239523" class="info-item" id="phoneLink" onclick="trackInteraction('phone')">
+                        <div class="info-icon icon-phone"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Mobile</div>
+                            <div class="info-value" id="phone">604 723 9523</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
+                    <a href="tel:6042833503" class="info-item" onclick="trackInteraction('phone_office1')">
                         <div class="info-icon icon-phone"><i class="fas fa-phone"></i></div>
                         <div class="info-content">
-                            <div class="info-label" data-i18n="phone">Phone</div>
-                            <div class="info-value" id="phone">519 996 9388</div>
+                            <div class="info-label">Office</div>
+                            <div class="info-value">(604) 283-3503</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
+                    </a>
+
+                    <a href="tel:4038798847" class="info-item" onclick="trackInteraction('phone_office2')">
+                        <div class="info-icon icon-phone"><i class="fas fa-phone"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Office</div>
+                            <div class="info-value">(403) 879-8847</div>
                         </div>
                         <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
                     </a>
@@ -768,7 +786,7 @@
             </div>
 
             <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
-                <a href="https://www.linkedin.com/in/pierrecbourbonnais" target="_blank" 
+                <a href="https://www.linkedin.com/company/superhr-canada" target="_blank" 
                    class="info-item" style="flex: 0 0 auto; width: 60px; height: 60px; justify-content: center; padding: 0;"
                    onclick="trackInteraction('linkedin_social')">
                     <div class="info-icon icon-linkedin" style="width: 44px; height: 44px;">
@@ -837,9 +855,8 @@
             },
             zohoCRM: {
                 webhookUrl: "https://crm.zoho.com/crm/WebToLeadForm",
-                xnQsjsdp: "fa6f8c45b3038b9177480c2ef0b13e6a9028ec4b33ad6b1f842d5ea899544c1b",
-                // TODO: Replace with Pierre's xmIwtLD from Zoho CRM WebToLead form
-                xmIwtLD: "3d6f757b81c3154fbad2b40a4429f7cfddb8386d9bacdb7ce99ef911f1ded4771cfb916616f1852cb1cf5558a282f501",
+                xnQsjsdp: "20f62e81e6945430e99781cac4275e76899a712adfea8da2527c2db3d370452e",
+                xmIwtLD: "50f660054d7e25249177d22a32932a193715d40fa20571af802f682b4539d1d96144379be91297304661b34c370e7178",
                 actionType: "TGVhZHM=",
                 integrationType: "webhook"
             },
@@ -1146,6 +1163,7 @@
             
             document.getElementById('emailLink').href = `mailto:${CONFIG.employee.email}`;
             document.getElementById('phoneLink').href = `tel:${CONFIG.employee.phone.replace(/\D/g,'')}`;
+            document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
             document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
             document.getElementById('websiteLink').href = CONFIG.employee.websiteUrl;
             document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
