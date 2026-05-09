@@ -712,7 +712,7 @@
                             <input type="text" class="form-input" id="leadFirstName" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="lastName">Last Name</label>
+                            <label class="form-label" data-i18n="lastName">Last Name <span style="color:red">*</span></label>
                             <input type="text" class="form-input" id="leadLastName" required>
                         </div>
                     </div>
@@ -724,8 +724,8 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="company">Company</label>
-                            <input type="text" class="form-input" id="leadCompany">
+                            <label class="form-label" data-i18n="company">Company <span style="color:red">*</span></label>
+                            <input type="text" class="form-input" id="leadCompany" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" data-i18n="jobTitleField">Job Title</label>
@@ -755,7 +755,7 @@
                     <p style="color: var(--superhr-dark-gray);" data-i18n="successMessage">Your message has been sent. I'll be in touch soon.</p>
                     <div class="zoho-badge">
                         <i class="fas fa-check-circle"></i>
-                        <span>Submitted to Zoho Forms</span>
+                        <span>Added to Zoho CRM</span>
                     </div>
                 </div>
             </div>
@@ -853,8 +853,12 @@
                 profileImage: "https://raw.githubusercontent.com/SuperHRCanada/superhr-digital-cards/main/cards/edy-haddad/edy.png",
                 zohoUserId: "edy@superhrcanada.com"
             },
-            zohoForms: {
-                leadFormUrl: "https://forms.zohopublic.com/SuperHRCanada/form/DBCEdy/formperma/b2tM0xH6erNpcmsnEGMsy58UTSyh-vCeWXBlRWBEpTQ"
+            zohoCRM: {
+                webhookUrl: "https://crm.zoho.com/crm/WebToLeadForm",
+                xnQsjsdp: "8efa27d7ac96dfd21b04612195ce4f3d894515509baf9b7f6089f9e988591bd1",
+                xmIwtLD: "3d6f757b81c3154fbad2b40a4429f7cfddb8386d9bacdb7ce99ef911f1ded4771cfb916616f1852cb1cf5558a282f501",
+                actionType: "TGVhZHM=",
+                integrationType: "webhook"
             },
             zohoBookings: {
                 enabled: true,
@@ -1205,6 +1209,33 @@
             }
         };
 
+        const ZohoCRM = {
+            async submitLead(leadData) {
+                const formData = new URLSearchParams();
+                formData.append('xnQsjsdp', CONFIG.zohoCRM.xnQsjsdp);
+                formData.append('xmIwtLD', CONFIG.zohoCRM.xmIwtLD);
+                formData.append('actionType', CONFIG.zohoCRM.actionType);
+                formData.append('returnURL', window.location.href);
+                formData.append('First Name', leadData.firstName);
+                formData.append('Last Name', leadData.lastName);
+                formData.append('Email', leadData.email);
+                formData.append('Company', leadData.company);
+                formData.append('Phone', leadData.phone || '');
+                formData.append('Designation', leadData.jobTitle || '');
+                formData.append('Description', leadData.message || '');
+                formData.append('aG9uZXlwb3Q', '');
+                
+                await fetch(CONFIG.zohoCRM.webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData,
+                    mode: 'no-cors'
+                });
+                
+                return { status: 'submitted' };
+            }
+        };
+
         const ZohoCampaigns = {
             subscribeViaForm(subscriberData) {
                 const form = document.createElement('form');
@@ -1410,26 +1441,7 @@
                     hasMessage: !!formData.message 
                 });
                 
-                // Build form data for direct POST to Zoho Forms
-                const zohoData = new URLSearchParams();
-                zohoData.append('First_Name', formData.firstName);
-                zohoData.append('Last_Name', formData.lastName);
-                zohoData.append('Work_Email', formData.email);
-                zohoData.append('Company', formData.company);
-                zohoData.append('Job_Title', formData.jobTitle);
-                zohoData.append('Phone_Number', formData.phone);
-                zohoData.append('Message', formData.message);
-                zohoData.append('Digital_Card_URL', formData.source);
-                zohoData.append('Assigned_Employee', formData.employee);
-                
-                await fetch(CONFIG.zohoForms.leadFormUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: zohoData,
-                    mode: 'no-cors'
-                });
+                await ZohoCRM.submitLead(formData);
                 
                 document.getElementById('leadForm').style.display = 'none';
                 document.getElementById('successState').classList.add('active');
@@ -1438,7 +1450,7 @@
                 showToast(translations[currentLanguage].thankYou);
                 
             } catch (error) {
-                console.error('Zoho Forms Error:', error);
+                console.error('Zoho CRM Error:', error);
                 showToast(translations[currentLanguage].errorSubmit);
                 Analytics.trackEvent('lead_form_error', { error: error.message });
             } finally {
