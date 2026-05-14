@@ -611,6 +611,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -625,7 +626,7 @@
 
             <div class="card-body">
                 <div class="info-grid">
-                    <a href="#" class="info-item" id="emailLink" onclick="trackInteraction('email')">
+                    <a href="mailto:edy@superhrcanada.com" class="info-item" id="emailLink" onclick="trackInteraction('email')">
                         <div class="info-icon icon-email"><i class="fas fa-envelope"></i></div>
                         <div class="info-content">
                             <div class="info-label" data-i18n="email">Email</div>
@@ -634,7 +635,7 @@
                         <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
                     </a>
 
-                    <a href="#" class="info-item" id="phoneLink" onclick="trackInteraction('phone')">
+                    <a href="tel:5199969388" class="info-item" id="phoneLink" onclick="trackInteraction('phone')">
                         <div class="info-icon icon-phone"><i class="fas fa-phone"></i></div>
                         <div class="info-content">
                             <div class="info-label" data-i18n="phone">Phone</div>
@@ -643,7 +644,7 @@
                         <i class="fas fa-chevron-right" style="color: var(--superhr-light-gray); font-size: 0.8rem;"></i>
                     </a>
 
-                    <a href="#" target="_blank" class="info-item" id="websiteLink" onclick="trackInteraction('website')">
+                    <a href="https://www.superhrcanada.com" target="_blank" class="info-item" id="websiteLink" onclick="trackInteraction('website')">
                         <div class="info-icon icon-website"><i class="fas fa-globe"></i></div>
                         <div class="info-content">
                             <div class="info-label" data-i18n="website">Website</div>
@@ -693,23 +694,23 @@
                 <form id="leadForm" onsubmit="submitLead(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="firstName">First Name <span style="color:red">*</span></label>
+                            <label class="form-label" data-i18n="firstName">First Name</label>
                             <input type="text" class="form-input" id="leadFirstName" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="lastName">Last Name <span style="color:red">*</span></label>
+                            <label class="form-label" data-i18n="lastName">Last Name</label>
                             <input type="text" class="form-input" id="leadLastName" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="workEmail">Work Email <span style="color:red">*</span></label>
+                        <label class="form-label" data-i18n="workEmail">Work Email</label>
                         <input type="email" class="form-input" id="leadEmail" required>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="company">Company <span style="color:red">*</span></label>
+                            <label class="form-label" data-i18n="company">Company</label>
                             <input type="text" class="form-input" id="leadCompany" required>
                         </div>
                         <div class="form-group">
@@ -1134,19 +1135,9 @@
             document.getElementById('linkedin').textContent = CONFIG.employee.linkedin;
             document.getElementById('profileImage').src = CONFIG.employee.profileImage;
             
-            document.getElementById('emailLink').href = `mailto:${CONFIG.employee.email}`;
-            document.getElementById('phoneLink').href = `tel:${CONFIG.employee.phone.replace(/\D/g,'')}`;
-            document.getElementById('websiteLink').href = CONFIG.employee.websiteUrl;
-            document.getElementById('linkedinLink').href = CONFIG.employee.linkedinUrl;
+            // Links are hardcoded in HTML for reliability - init() only sets text content
             
-            const qrUrl = `https://quickchart.io/qr?size=200&text=${encodeURIComponent(window.location.href)}`;
-                const qrImg = document.getElementById('qrImage');
-                qrImg.src = qrUrl;
-                qrImg.onerror = function() {
-                    // Fallback to Google Charts QR API if quickchart fails
-                    qrImg.src = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(window.location.href)}`;
-                    qrImg.onerror = null;
-                };
+            // QR code is generated when modal opens via showQR()
             
             const detectedLang = detectLanguage();
             setLanguage(detectedLang);
